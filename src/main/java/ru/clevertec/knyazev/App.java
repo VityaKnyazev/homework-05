@@ -1,14 +1,29 @@
-package ru.clevertec.knyazev.json;
+package ru.clevertec.knyazev;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import ru.clevertec.knyazev.json.JsonToObjectParserImpl;
+import ru.clevertec.knyazev.json.ObjectToJsonParserImpl;
+import ru.clevertec.knyazev.json.exception.ParserException;
 
 public class App {
 
 	public static void main(String[] args) {
-		JsonParser jsonParser = new JsonParserImpl();
+		Pattern arrFieldPattern = Pattern.compile("\\s{0,}\"\\w+?\"\\s{0,}:\\s{0,}\\[");
+		Matcher m = arrFieldPattern.matcher("255 \"strArr\":[");
+		while (m.find()) {
+			System.out.println(m.start());
+		}
+		
+		
+		ObjectToJsonParserImpl jsonParser = new ObjectToJsonParserImpl();
 		Vano v = new Vano();
 		v.name = 12;
 		v.family = "Full";
@@ -20,6 +35,14 @@ public class App {
 
 		String res = jsonParser.parseToJson(v);
 		System.out.println(res);
+		
+		String jSon = "{\"name\":12,\"family\":\"Full\",\"age\":18,\"isGod\":false,\"sergo\":{\"name\":128,\"family\":\"Ser\"},\"strArr\":[[{\"name\":12,\"family\":\"5\"},{\"name\":null,\"family\":null}],[{\"name\":4,\"family\":\"8\"}]],\"strList\":[[{\"name\":13,\"family\":\"8\"}],[{\"name\":14,\"family\":\"6\"},{\"name\":17,\"family\":\"10\"}]],\"strMap\":{\"Something more\":[{\"name\":125,\"family\":\"herself\"},{\"name\":512,\"family\":\"history\"}],\"Something\":[{\"name\":155,\"family\":\"self\"},{\"name\":215,\"family\":\"hero\"}]}}";
+		JsonToObjectParserImpl jsonToObjectParserImpl = new JsonToObjectParserImpl();
+		try {
+			jsonToObjectParserImpl.parseToObject(jSon, Vano.class);
+		} catch (ParserException e) {
+			e.printStackTrace();
+		}
 //		List<String> cob = jsonParser.getCompositeObjectsNames(v);
 //		String fieldName = cob.get(0);
 //		
@@ -60,6 +83,16 @@ public class App {
 			add(new ArrayList<>() {{
 				add(new Sergo(14, "6"));
 				add(new Sergo(17, "10"));
+			}});
+		}};
+		private Map<String, List<Sergo>> strMap = new HashMap<>() {{
+			put("Something", new ArrayList<>() {{
+				add(new Sergo(155, "self"));
+				add(new Sergo(215, "hero"));
+			}});
+			put("Something more", new ArrayList<>() {{
+				add(new Sergo(125, "herself"));
+				add(new Sergo(512, "history"));
 			}});
 		}};
 	}
