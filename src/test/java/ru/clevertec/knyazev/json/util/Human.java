@@ -9,6 +9,26 @@ public class Human {
 
 	public Human() {
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public String getFamily() {
+		return family;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public boolean isGod() {
+		return isGod;
+	}
+
+	public Integer getChildrenQuantity() {
+		return childrenQuantity;
+	}
 
 	public static class Builder {
 		Human human;
